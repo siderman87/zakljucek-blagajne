@@ -3,264 +3,250 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zaključek blagajne - Login</title>
+  <title>Zaključek blagajne - Admin panel</title>
   <style>
     *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;color:#172033}
-    header{background:linear-gradient(135deg,#1f7a4f,#2fb66d);color:white;padding:24px 16px}
-    .wrap{max-width:1100px;margin:0 auto}
-    h1{margin:0;font-size:28px}
+    :root{--green:#1f7a4f;--green2:#2fb66d;--line:#d8dee9;--muted:#667085;--danger:#b42318;--warn:#b7791f}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#edf7f1,#f7f9fc);color:#172033}
+    header{background:linear-gradient(135deg,var(--green),var(--green2));color:white;padding:24px 16px}
+    .wrap{max-width:1200px;margin:0 auto}
+    h1{margin:0;font-size:28px} h2{margin:0 0 14px} h3{margin:18px 0 10px}
     header p{margin:6px 0 0}
-    main{padding:20px 16px}
-    .card{background:white;border:1px solid #d8dee9;border-radius:18px;box-shadow:0 14px 35px rgba(15,23,42,.10);padding:18px;margin-bottom:18px}
+    main{padding:20px 16px 40px}
+    .card{background:white;border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 35px rgba(15,23,42,.10);padding:18px;margin-bottom:18px}
     .login-card{max-width:430px;margin:35px auto}
     label{display:block;font-weight:bold;margin:10px 0 6px}
-    input,select,textarea{width:100%;padding:12px;border:1px solid #d8dee9;border-radius:12px;font-size:15px}
+    input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:white}
     textarea{min-height:80px}
     button{border:0;border-radius:12px;padding:12px 15px;font-weight:bold;cursor:pointer;background:#e8eef6;color:#172033}
-    button.primary{background:#1f7a4f;color:white}
+    button.primary{background:var(--green);color:white}
     button.danger{background:#fee2e2;color:#991b1b}
+    button.small{padding:8px 10px;font-size:13px}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    @media(max-width:760px){.row,.row3{grid-template-columns:1fr}}
-    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .box{border:1px solid #d8dee9;border-radius:14px;padding:14px;background:#f8fafc}
-    .box small{display:block;color:#667085;margin-bottom:4px}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    @media(max-width:900px){.grid,.row,.row3{grid-template-columns:1fr}}
+    .box{border:1px solid var(--line);border-radius:14px;padding:14px;background:#f8fafc}
+    .box small{display:block;color:var(--muted);margin-bottom:4px}
     .box b{font-size:22px}
-    .result,.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
-    @media(max-width:600px){.result,.stats{grid-template-columns:1fr}}
-    .ok{color:#1f7a4f}.bad{color:#c0392b}.warn{color:#b7791f}
+    .result,.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+    @media(max-width:800px){.result,.stats{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:520px){.result,.stats{grid-template-columns:1fr}}
+    .ok{color:var(--green)}.bad{color:var(--danger)}.warn{color:var(--warn)}
     .pill{display:inline-block;padding:4px 9px;border-radius:999px;background:#eef2ff;font-size:12px}
-    .muted{color:#667085}
+    .muted{color:var(--muted)}
     .userbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .userbox{background:white;border:1px solid #d8dee9;border-radius:14px;padding:12px 14px}
+    .userbox{background:white;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
     table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:10px;border-bottom:1px solid #d8dee9;text-align:left}
+    th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
     th{background:#f8fafc}
     .tablewrap{overflow:auto}
-    #app{display:none}
-    .adminOnly{display:none}
+    #app{display:none}.adminOnly{display:none}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .tab{background:#eef2f7}.tab.active{background:var(--green);color:white}
+    .adminPage{display:none}.adminPage.active{display:block}
+    .help{background:#f8fafc;border:1px dashed var(--line);border-radius:14px;padding:12px;margin-top:14px;font-size:13px;color:var(--muted)}
   </style>
 </head>
 <body>
 <header>
   <div class="wrap">
     <h1>Zaključek blagajne</h1>
-    <p>Prijava prodajalke ali pisarne</p>
+    <p>Prijava prodajalke, pisarna in pravi admin panel</p>
   </div>
 </header>
 
 <main class="wrap">
-
   <section id="loginScreen" class="card login-card">
     <h2>Prijava</h2>
     <p class="muted">Vnesi PIN in klikni Prijava.</p>
-
     <label>PIN koda</label>
     <input type="password" id="pinInput" placeholder="Vnesi PIN" inputmode="numeric" autocomplete="off">
-
-    <div class="actions">
-      <button class="primary" type="button" id="loginBtn">Prijava</button>
-    </div>
-
-    <p class="muted">
-      Testni PIN-i:<br>
-      Špela 1111 · Maja 2222 · Nina 3333 · Petra 4444 · Pisarna 9999
-    </p>
+    <div class="actions"><button class="primary" type="button" id="loginBtn">Prijava</button></div>
+    <div class="help">Privzeto: Pisarna/Admin PIN <b>9999</b>. V admin panelu lahko potem nastaviš prodajalke, PIN-e in trgovine.</div>
   </section>
 
   <section id="app">
     <div class="userbar">
-      <div class="userbox">
-        Prijavljen/a: <b id="loggedName"></b> <span id="loggedRole" class="pill"></span>
-      </div>
+      <div class="userbox">Prijavljen/a: <b id="loggedName"></b> <span id="loggedRole" class="pill"></span></div>
       <button type="button" id="logoutBtn">Odjava</button>
     </div>
 
-    <div class="grid">
-      <section class="card">
-        <h2>Obrazec zaključka</h2>
+    <section id="sellerView">
+      <div class="grid">
+        <section class="card">
+          <h2>Obrazec zaključka</h2>
+          <form id="form">
+            <div class="row3">
+              <div><label>Datum</label><input type="date" id="datum" required></div>
+              <div><label>Trgovina</label><select id="trgovina"></select></div>
+              <div><label>Izmena</label><select id="izmena"><option>Dopoldan</option><option>Popoldan</option><option>Cel dan</option></select></div>
+            </div>
+            <div class="row">
+              <div><label>Prodajalka</label><select id="prodajalka"></select></div>
+              <div><label>Začetno stanje €</label><input type="number" step="0.01" id="zacetno" value="0"></div>
+            </div>
+            <div class="row">
+              <div><label>Gotovina po POS €</label><input type="number" step="0.01" id="posGotovina" value="0"></div>
+              <div><label>Prešteta gotovina €</label><input type="number" step="0.01" id="presteta" value="0"></div>
+              <div><label>Kartice €</label><input type="number" step="0.01" id="kartice" value="0"></div>
+              <div><label>Stroški / izplačila €</label><input type="number" step="0.01" id="stroski" value="0"></div>
+            </div>
+            <label>Opombe</label><textarea id="opombe"></textarea>
+            <div class="result">
+              <div class="box"><small>Pričakovano</small><b id="pricakovano">0,00 €</b></div>
+              <div class="box"><small>Promet</small><b id="promet">0,00 €</b></div>
+              <div class="box"><small>Razlika</small><b id="razlika">0,00 €</b></div>
+              <div class="box"><small>Status</small><b id="status" class="ok">OK</b></div>
+            </div>
+            <div class="actions">
+              <button class="primary" type="submit">Shrani zaključek</button>
+              <button type="button" id="newEntry">Nov vnos</button>
+            </div>
+          </form>
+        </section>
 
-        <form id="form">
-          <div class="row3">
-            <div>
-              <label>Datum</label>
-              <input type="date" id="datum" required>
-            </div>
-            <div>
-              <label>Trgovina</label>
-              <select id="trgovina">
-                <option>Medvode</option>
-                <option>Ljubljana</option>
-                <option>Kranj</option>
-              </select>
-            </div>
-            <div>
-              <label>Izmena</label>
-              <select id="izmena">
-                <option>Dopoldan</option>
-                <option>Popoldan</option>
-                <option>Cel dan</option>
-              </select>
+        <aside class="adminOnly">
+          <div class="card">
+            <h2>Hitri dashboard</h2>
+            <div class="stats">
+              <div class="box"><small>Zaključkov</small><b id="sCount">0</b></div>
+              <div class="box"><small>Promet</small><b id="sPromet">0,00 €</b></div>
+              <div class="box"><small>Gotovina POS</small><b id="sGotovina">0,00 €</b></div>
+              <div class="box"><small>Razlika</small><b id="sRazlika">0,00 €</b></div>
             </div>
           </div>
-
-          <div class="row">
-            <div>
-              <label>Prodajalka</label>
-              <select id="prodajalka">
-                <option>Špela</option>
-                <option>Maja</option>
-                <option>Nina</option>
-                <option>Petra</option>
-              </select>
-            </div>
-            <div>
-              <label>Začetno stanje €</label>
-              <input type="number" step="0.01" id="zacetno" value="0">
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label>Gotovina po POS €</label>
-              <input type="number" step="0.01" id="posGotovina" value="0">
-            </div>
-            <div>
-              <label>Prešteta gotovina €</label>
-              <input type="number" step="0.01" id="presteta" value="0">
-            </div>
-            <div>
-              <label>Kartice €</label>
-              <input type="number" step="0.01" id="kartice" value="0">
-            </div>
-            <div>
-              <label>Stroški / izplačila €</label>
-              <input type="number" step="0.01" id="stroski" value="0">
-            </div>
-          </div>
-
-          <label>Opombe</label>
-          <textarea id="opombe"></textarea>
-
-          <div class="result">
-            <div class="box"><small>Pričakovano</small><b id="pricakovano">0,00 €</b></div>
-            <div class="box"><small>Promet</small><b id="promet">0,00 €</b></div>
-            <div class="box"><small>Razlika</small><b id="razlika">0,00 €</b></div>
-            <div class="box"><small>Status</small><b id="status" class="ok">OK</b></div>
-          </div>
-
-          <div class="actions">
-            <button class="primary" type="submit">Shrani zaključek</button>
-            <button type="button" id="newEntry">Nov vnos</button>
-            <button type="button" id="exportCsv" class="adminOnly">Izvozi CSV</button>
-          </div>
-        </form>
-      </section>
-
-      <aside class="adminOnly">
-        <div class="card">
-          <h2>Dashboard pisarna</h2>
-          <div class="stats">
-            <div class="box"><small>Zaključkov</small><b id="sCount">0</b></div>
-            <div class="box"><small>Promet</small><b id="sPromet">0,00 €</b></div>
-            <div class="box"><small>Gotovina POS</small><b id="sGotovina">0,00 €</b></div>
-            <div class="box"><small>Razlika</small><b id="sRazlika">0,00 €</b></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Filtri</h2>
-          <div class="row">
-            <div>
-              <label>Trgovina</label>
-              <select id="filterTrgovina">
-                <option value="">Vse</option>
-                <option>Medvode</option>
-                <option>Ljubljana</option>
-                <option>Kranj</option>
-              </select>
-            </div>
-            <div>
-              <label>Prodajalka</label>
-              <select id="filterProdajalka">
-                <option value="">Vse</option>
-                <option>Špela</option>
-                <option>Maja</option>
-                <option>Nina</option>
-                <option>Petra</option>
-              </select>
-            </div>
-          </div>
-          <div class="actions">
-            <button type="button" id="resetFilters">Počisti filtre</button>
-            <button type="button" class="danger" id="clearAll">Izbriši vse</button>
-          </div>
-        </div>
-      </aside>
-    </div>
-
-    <div class="card adminOnly">
-      <h2>Pregled zaključkov</h2>
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Datum</th><th>Trgovina</th><th>Prodajalka</th><th>Izmena</th>
-              <th>Promet</th><th>Gotovina POS</th><th>Prešteto</th><th>Razlika</th><th>Status</th><th></th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
+        </aside>
       </div>
-    </div>
+    </section>
+
+    <section class="adminOnly card">
+      <h2>Admin panel</h2>
+      <div class="tabs">
+        <button class="tab active" data-tab="pregled">Pregled</button>
+        <button class="tab" data-tab="statistika">Statistika</button>
+        <button class="tab" data-tab="prodajalke">Prodajalke in PIN-i</button>
+        <button class="tab" data-tab="trgovine">Trgovine</button>
+      </div>
+
+      <div id="tab-pregled" class="adminPage active">
+        <div class="row3">
+          <div><label>Trgovina</label><select id="filterTrgovina"></select></div>
+          <div><label>Prodajalka</label><select id="filterProdajalka"></select></div>
+          <div><label>Mesec</label><input type="month" id="filterMesec"></div>
+        </div>
+        <div class="actions">
+          <button type="button" id="resetFilters">Počisti filtre</button>
+          <button type="button" id="exportCsv">Izvozi CSV</button>
+          <button type="button" class="danger" id="clearAll">Izbriši vse zaključke</button>
+        </div>
+        <h3>Zaključki</h3>
+        <div class="tablewrap"><table><thead><tr><th>Datum</th><th>Trgovina</th><th>Prodajalka</th><th>Izmena</th><th>Promet</th><th>Gotovina POS</th><th>Prešteto</th><th>Razlika</th><th>Status</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
+      </div>
+
+      <div id="tab-statistika" class="adminPage">
+        <div class="stats">
+          <div class="box"><small>Dnevni promet</small><b id="dailyPromet">0,00 €</b></div>
+          <div class="box"><small>Tedenski promet</small><b id="weeklyPromet">0,00 €</b></div>
+          <div class="box"><small>Mesečni promet</small><b id="monthlyPromet">0,00 €</b></div>
+          <div class="box"><small>Skupna razlika</small><b id="totalDiff">0,00 €</b></div>
+        </div>
+        <h3>Po trgovinah</h3><div class="tablewrap"><table><thead><tr><th>Trgovina</th><th>Zaključkov</th><th>Promet</th><th>Razlika</th></tr></thead><tbody id="storeStats"></tbody></table></div>
+        <h3>Po prodajalkah</h3><div class="tablewrap"><table><thead><tr><th>Prodajalka</th><th>Zaključkov</th><th>Promet</th><th>Razlika</th></tr></thead><tbody id="sellerStats"></tbody></table></div>
+      </div>
+
+      <div id="tab-prodajalke" class="adminPage">
+        <div class="row3">
+          <div><label>Ime prodajalke</label><input id="newUserName" placeholder="npr. Ana"></div>
+          <div><label>PIN</label><input id="newUserPin" placeholder="npr. 5555" inputmode="numeric"></div>
+          <div><label>Vloga</label><select id="newUserRole"><option value="prodajalka">Prodajalka</option><option value="admin">Pisarna/Admin</option></select></div>
+        </div>
+        <div class="actions"><button class="primary" type="button" id="addUser">Dodaj / posodobi uporabnika</button></div>
+        <div class="help">Če želiš spremeniti PIN, vpiši isto ime in nov PIN. Admin lahko vidi statistiko in nastavitve.</div>
+        <h3>Seznam uporabnikov</h3>
+        <div class="tablewrap"><table><thead><tr><th>Ime</th><th>PIN</th><th>Vloga</th><th></th></tr></thead><tbody id="usersTbody"></tbody></table></div>
+      </div>
+
+      <div id="tab-trgovine" class="adminPage">
+        <div class="row">
+          <div><label>Nova trgovina</label><input id="newStoreName" placeholder="npr. Škofja Loka"></div>
+          <div style="align-self:end"><button class="primary" type="button" id="addStore">Dodaj trgovino</button></div>
+        </div>
+        <h3>Seznam trgovin</h3>
+        <div class="tablewrap"><table><thead><tr><th>Trgovina</th><th></th></tr></thead><tbody id="storesTbody"></tbody></table></div>
+      </div>
+    </section>
   </section>
 </main>
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
+  const SETTINGS_KEY = 'zb_admin_settings_v1';
+  const ROWS_KEY = 'zb_rows_v1';
+  const LOGIN_KEY = 'zb_login_v1';
 
-  const KEY = 'zakljucek_blagajne_v5';
-  const LOGIN_KEY = 'zakljucek_login_v5';
-
-  const users = {
-    "1111": { name: "Špela", role: "prodajalka" },
-    "2222": { name: "Maja", role: "prodajalka" },
-    "3333": { name: "Nina", role: "prodajalka" },
-    "4444": { name: "Petra", role: "prodajalka" },
-    "9999": { name: "Pisarna", role: "admin" }
+  const defaultSettings = {
+    users: [
+      {name:'Špela', pin:'1111', role:'prodajalka'},
+      {name:'Maja', pin:'2222', role:'prodajalka'},
+      {name:'Nina', pin:'3333', role:'prodajalka'},
+      {name:'Petra', pin:'4444', role:'prodajalka'},
+      {name:'Pisarna', pin:'9999', role:'admin'}
+    ],
+    stores: ['Medvode','Ljubljana','Kranj']
   };
 
+  let settings = loadSettings();
   let currentUser = null;
 
   const el = id => document.getElementById(id);
   const eur = n => (Number(n)||0).toLocaleString('sl-SI',{style:'currency',currency:'EUR'});
   const val = id => Number(el(id).value || 0);
 
-  function todayISO(){
-    const d = new Date();
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().slice(0,10);
+  function loadSettings(){
+    const saved = localStorage.getItem(SETTINGS_KEY);
+    if(!saved){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(defaultSettings)); return structuredClone(defaultSettings); }
+    try{return JSON.parse(saved)}catch(e){return structuredClone(defaultSettings)}
+  }
+  function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+  function loadRows(){ return JSON.parse(localStorage.getItem(ROWS_KEY) || '[]'); }
+  function saveRows(rows){ localStorage.setItem(ROWS_KEY, JSON.stringify(rows)); }
+  function isAdmin(){ return currentUser && currentUser.role === 'admin'; }
+  function todayISO(){ const d = new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+  function weekStartISO(){
+    const d = new Date(); const day = (d.getDay()+6)%7; d.setDate(d.getDate()-day); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10);
+  }
+  function monthISO(){ return todayISO().slice(0,7); }
+
+  function fillSelect(select, items, includeAll=false){
+    select.innerHTML = includeAll ? '<option value="">Vse</option>' : '';
+    items.forEach(x => {
+      const o = document.createElement('option');
+      o.value = x; o.textContent = x; select.appendChild(o);
+    });
   }
 
-  function load(){ return JSON.parse(localStorage.getItem(KEY) || '[]'); }
-  function save(rows){ localStorage.setItem(KEY, JSON.stringify(rows)); }
-  function isAdmin(){ return currentUser && currentUser.role === 'admin'; }
+  function refreshLists(){
+    fillSelect(el('trgovina'), settings.stores);
+    fillSelect(el('filterTrgovina'), settings.stores, true);
+    const sellers = settings.users.filter(u=>u.role==='prodajalka').map(u=>u.name);
+    fillSelect(el('prodajalka'), sellers);
+    fillSelect(el('filterProdajalka'), sellers, true);
+    renderUsers();
+    renderStores();
+  }
 
   function calc(){
     const pricakovano = val('zacetno') + val('posGotovina') - val('stroski');
     const promet = val('posGotovina') + val('kartice');
     const razlika = val('presteta') - pricakovano;
-
     el('pricakovano').textContent = eur(pricakovano);
     el('promet').textContent = eur(promet);
     el('razlika').textContent = eur(razlika);
     el('razlika').className = Math.abs(razlika)<=0.02 ? 'ok' : razlika < 0 ? 'bad' : 'warn';
     el('status').textContent = Math.abs(razlika)<=0.02 ? 'OK' : razlika < 0 ? 'MANJKO' : 'VIŠEK';
     el('status').className = Math.abs(razlika)<=0.02 ? 'ok' : razlika < 0 ? 'bad' : 'warn';
-
     return {pricakovano, promet, razlika};
   }
 
@@ -268,10 +254,15 @@ document.addEventListener('DOMContentLoaded', function(){
     el('loginScreen').style.display = 'none';
     el('app').style.display = 'block';
     el('loggedName').textContent = currentUser.name;
-    el('loggedRole').textContent = isAdmin() ? 'PISARNA' : 'PRODAJALKA';
-
+    el('loggedRole').textContent = isAdmin() ? 'PISARNA/ADMIN' : 'PRODAJALKA';
     document.querySelectorAll('.adminOnly').forEach(x => x.style.display = isAdmin() ? '' : 'none');
+    refreshLists();
+    resetForm();
+    renderAll();
+  }
 
+  function resetForm(){
+    el('form').reset();
     el('datum').value = todayISO();
     if(!isAdmin()){
       el('prodajalka').value = currentUser.name;
@@ -279,174 +270,159 @@ document.addEventListener('DOMContentLoaded', function(){
     } else {
       el('prodajalka').disabled = false;
     }
-
     calc();
-    render();
   }
 
   function login(){
     const pin = el('pinInput').value.trim();
-
-    if(!users[pin]){
-      alert('Napačen PIN');
-      el('pinInput').value = '';
-      el('pinInput').focus();
-      return;
-    }
-
-    currentUser = users[pin];
-    localStorage.setItem(LOGIN_KEY, JSON.stringify(currentUser));
+    const user = settings.users.find(u => u.pin === pin);
+    if(!user){ alert('Napačen PIN'); el('pinInput').value=''; el('pinInput').focus(); return; }
+    currentUser = user;
+    localStorage.setItem(LOGIN_KEY, JSON.stringify(user));
     showApp();
   }
 
-  function logout(){
-    localStorage.removeItem(LOGIN_KEY);
-    location.reload();
+  function logout(){ localStorage.removeItem(LOGIN_KEY); location.reload(); }
+
+  function filteredRows(){
+    let rows = loadRows();
+    if(!isAdmin()) return rows.filter(r => r.prodajalka === currentUser.name);
+    const ft = el('filterTrgovina').value, fp = el('filterProdajalka').value, fm = el('filterMesec').value;
+    return rows.filter(r => (!ft || r.trgovina===ft) && (!fp || r.prodajalka===fp) && (!fm || String(r.datum).startsWith(fm)));
   }
 
-  function render(){
+  function renderAll(){
+    renderRows();
+    renderStats();
+    renderUsers();
+    renderStores();
+  }
+
+  function renderRows(){
     if(!isAdmin()) return;
+    const rows = filteredRows().sort((a,b)=>(b.created||'').localeCompare(a.created||''));
+    el('tbody').innerHTML = rows.map(r => `<tr>
+      <td>${r.datum}</td><td>${r.trgovina}</td><td>${r.prodajalka}</td><td>${r.izmena}</td>
+      <td>${eur(r.promet)}</td><td>${eur(r.posGotovina)}</td><td>${eur(r.presteta)}</td>
+      <td class="${Math.abs(r.razlika)<=0.02?'ok':r.razlika<0?'bad':'warn'}">${eur(r.razlika)}</td>
+      <td>${Math.abs(r.razlika)<=0.02?'OK':r.razlika<0?'MANJKO':'VIŠEK'}</td>
+      <td><button class="danger small" data-del-row="${r.id}">Briši</button></td>
+    </tr>`).join('') || '<tr><td colspan="10" class="muted">Ni shranjenih zaključkov.</td></tr>';
 
-    const ft = el('filterTrgovina').value;
-    const fp = el('filterProdajalka').value;
-
-    const rows = load().filter(r =>
-      (!ft || r.trgovina === ft) &&
-      (!fp || r.prodajalka === fp)
-    ).sort((a,b) => (b.created || '').localeCompare(a.created || ''));
-
-    el('tbody').innerHTML = rows.map(r => `
-      <tr>
-        <td>${r.datum}</td>
-        <td>${r.trgovina}</td>
-        <td>${r.prodajalka}</td>
-        <td>${r.izmena}</td>
-        <td>${eur(r.promet)}</td>
-        <td>${eur(r.posGotovina)}</td>
-        <td>${eur(r.presteta)}</td>
-        <td class="${Math.abs(r.razlika)<=0.02?'ok':r.razlika<0?'bad':'warn'}">${eur(r.razlika)}</td>
-        <td>${Math.abs(r.razlika)<=0.02?'OK':r.razlika<0?'MANJKO':'VIŠEK'}</td>
-        <td><button class="danger" type="button" data-delete="${r.id}">Briši</button></td>
-      </tr>
-    `).join('') || '<tr><td colspan="10" class="muted">Ni shranjenih zaključkov.</td></tr>';
-
-    document.querySelectorAll('[data-delete]').forEach(btn => {
-      btn.onclick = function(){
-        if(confirm('Izbrišem ta zaključek?')){
-          save(load().filter(x => x.id !== btn.dataset.delete));
-          render();
-        }
-      };
+    document.querySelectorAll('[data-del-row]').forEach(btn => btn.onclick = () => {
+      if(confirm('Izbrišem ta zaključek?')){ saveRows(loadRows().filter(x=>x.id!==btn.dataset.delRow)); renderAll(); }
     });
 
-    const sum = rows.reduce((a,r)=>{
-      a.promet += Number(r.promet)||0;
-      a.gotovina += Number(r.posGotovina)||0;
-      a.razlika += Number(r.razlika)||0;
-      return a;
-    }, {promet:0, gotovina:0, razlika:0});
-
-    el('sCount').textContent = rows.length;
-    el('sPromet').textContent = eur(sum.promet);
-    el('sGotovina').textContent = eur(sum.gotovina);
-    el('sRazlika').textContent = eur(sum.razlika);
+    const sum = rows.reduce((a,r)=>{a.promet+=+r.promet||0;a.gotovina+=+r.posGotovina||0;a.razlika+=+r.razlika||0;return a},{promet:0,gotovina:0,razlika:0});
+    el('sCount').textContent = rows.length; el('sPromet').textContent = eur(sum.promet); el('sGotovina').textContent = eur(sum.gotovina); el('sRazlika').textContent = eur(sum.razlika);
   }
 
-  function resetForm(){
-    el('form').reset();
-    el('datum').value = todayISO();
-    if(currentUser && !isAdmin()){
-      el('prodajalka').value = currentUser.name;
-      el('prodajalka').disabled = true;
-    }
-    calc();
+  function renderStats(){
+    if(!isAdmin()) return;
+    const rows = filteredRows();
+    const today = todayISO(), week = weekStartISO(), month = monthISO();
+    const sum = arr => arr.reduce((a,r)=>a+(+r.promet||0),0);
+    const diff = rows.reduce((a,r)=>a+(+r.razlika||0),0);
+    el('dailyPromet').textContent = eur(sum(rows.filter(r=>r.datum===today)));
+    el('weeklyPromet').textContent = eur(sum(rows.filter(r=>r.datum>=week)));
+    el('monthlyPromet').textContent = eur(sum(rows.filter(r=>String(r.datum).startsWith(month))));
+    el('totalDiff').textContent = eur(diff);
+
+    renderGroup('storeStats', rows, 'trgovina');
+    renderGroup('sellerStats', rows, 'prodajalka');
   }
 
-  el('loginBtn').addEventListener('click', login);
-  el('pinInput').addEventListener('keydown', e => {
-    if(e.key === 'Enter') login();
-  });
-  el('logoutBtn').addEventListener('click', logout);
-  el('newEntry').addEventListener('click', resetForm);
+  function renderGroup(tbodyId, rows, key){
+    const map = {};
+    rows.forEach(r => {
+      const k = r[key] || '-';
+      if(!map[k]) map[k] = {count:0,promet:0,razlika:0};
+      map[k].count++; map[k].promet += +r.promet||0; map[k].razlika += +r.razlika||0;
+    });
+    el(tbodyId).innerHTML = Object.entries(map).map(([k,v])=>`<tr><td>${k}</td><td>${v.count}</td><td>${eur(v.promet)}</td><td class="${v.razlika<0?'bad':v.razlika>0?'warn':'ok'}">${eur(v.razlika)}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">Ni podatkov.</td></tr>';
+  }
 
-  ['zacetno','posGotovina','presteta','kartice','stroski'].forEach(id => {
-    el(id).addEventListener('input', calc);
-  });
+  function renderUsers(){
+    if(!isAdmin()) return;
+    el('usersTbody').innerHTML = settings.users.map((u,i)=>`<tr><td>${u.name}</td><td>${u.pin}</td><td>${u.role}</td><td><button class="danger small" data-del-user="${i}">Briši</button></td></tr>`).join('');
+    document.querySelectorAll('[data-del-user]').forEach(btn => btn.onclick = () => {
+      const u = settings.users[+btn.dataset.delUser];
+      if(u.name === currentUser.name){ alert('Trenutno prijavljenega admina ne moreš izbrisati.'); return; }
+      if(confirm('Izbrišem uporabnika '+u.name+'?')){ settings.users.splice(+btn.dataset.delUser,1); saveSettings(); refreshLists(); renderAll(); }
+    });
+  }
 
-  el('form').addEventListener('submit', function(e){
+  function renderStores(){
+    if(!isAdmin()) return;
+    el('storesTbody').innerHTML = settings.stores.map((s,i)=>`<tr><td>${s}</td><td><button class="danger small" data-del-store="${i}">Briši</button></td></tr>`).join('');
+    document.querySelectorAll('[data-del-store]').forEach(btn => btn.onclick = () => {
+      const s = settings.stores[+btn.dataset.delStore];
+      if(confirm('Izbrišem trgovino '+s+'?')){ settings.stores.splice(+btn.dataset.delStore,1); saveSettings(); refreshLists(); renderAll(); }
+    });
+  }
+
+  el('loginBtn').onclick = login;
+  el('pinInput').addEventListener('keydown', e => { if(e.key==='Enter') login(); });
+  el('logoutBtn').onclick = logout;
+  el('newEntry').onclick = resetForm;
+  ['zacetno','posGotovina','presteta','kartice','stroski'].forEach(id=>el(id).addEventListener('input', calc));
+  ['filterTrgovina','filterProdajalka','filterMesec'].forEach(id=>el(id).addEventListener('input', renderAll));
+
+  el('form').addEventListener('submit', e => {
     e.preventDefault();
-
-    if(!currentUser){
-      alert('Najprej se prijavi.');
-      return;
-    }
-
     const c = calc();
-    const rows = load();
-
+    const rows = loadRows();
     rows.push({
-      id: Date.now().toString(),
-      created: new Date().toISOString(),
-      datum: el('datum').value,
-      trgovina: el('trgovina').value,
+      id: Date.now().toString(), created: new Date().toISOString(),
+      datum: el('datum').value, trgovina: el('trgovina').value,
       prodajalka: isAdmin() ? el('prodajalka').value : currentUser.name,
-      izmena: el('izmena').value,
-      zacetno: val('zacetno'),
-      posGotovina: val('posGotovina'),
-      presteta: val('presteta'),
-      kartice: val('kartice'),
-      stroski: val('stroski'),
-      opombe: el('opombe').value,
-      savedBy: currentUser.name,
-      ...c
+      izmena: el('izmena').value, zacetno: val('zacetno'), posGotovina: val('posGotovina'),
+      presteta: val('presteta'), kartice: val('kartice'), stroski: val('stroski'),
+      opombe: el('opombe').value, savedBy: currentUser.name, ...c
     });
-
-    save(rows);
-    alert('Zaključek je shranjen.');
-    resetForm();
-    render();
+    saveRows(rows); alert('Zaključek je shranjen.'); resetForm(); renderAll();
   });
 
-  el('filterTrgovina').addEventListener('change', render);
-  el('filterProdajalka').addEventListener('change', render);
-  el('resetFilters').addEventListener('click', function(){
-    el('filterTrgovina').value = '';
-    el('filterProdajalka').value = '';
-    render();
-  });
-  el('clearAll').addEventListener('click', function(){
-    if(confirm('Res izbrišem vse zaključke?')){
-      localStorage.removeItem(KEY);
-      render();
-    }
+  document.querySelectorAll('.tab').forEach(btn => btn.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.adminPage').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    el('tab-'+btn.dataset.tab).classList.add('active');
+    renderAll();
   });
 
-  el('exportCsv').addEventListener('click', function(){
-    if(!isAdmin()) return;
-    const rows = load();
+  el('addUser').onclick = () => {
+    const name = el('newUserName').value.trim(), pin = el('newUserPin').value.trim(), role = el('newUserRole').value;
+    if(!name || !pin){ alert('Vpiši ime in PIN.'); return; }
+    const duplicatePin = settings.users.find(u => u.pin === pin && u.name !== name);
+    if(duplicatePin){ alert('Ta PIN že uporablja '+duplicatePin.name); return; }
+    const existing = settings.users.find(u => u.name === name);
+    if(existing){ existing.pin = pin; existing.role = role; } else { settings.users.push({name,pin,role}); }
+    saveSettings(); el('newUserName').value=''; el('newUserPin').value=''; refreshLists(); renderAll();
+  };
+
+  el('addStore').onclick = () => {
+    const name = el('newStoreName').value.trim();
+    if(!name){ alert('Vpiši ime trgovine.'); return; }
+    if(!settings.stores.includes(name)) settings.stores.push(name);
+    saveSettings(); el('newStoreName').value=''; refreshLists(); renderAll();
+  };
+
+  el('resetFilters').onclick = () => { el('filterTrgovina').value=''; el('filterProdajalka').value=''; el('filterMesec').value=''; renderAll(); };
+  el('clearAll').onclick = () => { if(confirm('Res izbrišem vse zaključke?')){ localStorage.removeItem(ROWS_KEY); renderAll(); } };
+
+  el('exportCsv').onclick = () => {
+    const rows = filteredRows();
     const headers = ['Datum','Trgovina','Prodajalka','Izmena','Začetno','Gotovina POS','Prešteto','Kartice','Stroški','Promet','Pričakovano','Razlika','Opombe','Shranjeno od'];
-    const csv = [headers, ...rows.map(r => [r.datum,r.trgovina,r.prodajalka,r.izmena,r.zacetno,r.posGotovina,r.presteta,r.kartice,r.stroski,r.promet,r.pricakovano,r.razlika,r.opombe,r.savedBy])]
-      .map(line => line.map(v => `"${String(v ?? '').replaceAll('"','""')}"`).join(';')).join('\n');
+    const csv = [headers, ...rows.map(r=>[r.datum,r.trgovina,r.prodajalka,r.izmena,r.zacetno,r.posGotovina,r.presteta,r.kartice,r.stroski,r.promet,r.pricakovano,r.razlika,r.opombe,r.savedBy])]
+      .map(line=>line.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n');
+    const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='zakljucki-blagajne.csv'; a.click();
+  };
 
-    const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'zakljucki-blagajne.csv';
-    a.click();
-  });
-
-  el('datum').value = todayISO();
-
-  const savedLogin = localStorage.getItem(LOGIN_KEY);
-  if(savedLogin){
-    try{
-      currentUser = JSON.parse(savedLogin);
-      showApp();
-    }catch(e){
-      localStorage.removeItem(LOGIN_KEY);
-    }
-  }
-
+  refreshLists();
+  const saved = localStorage.getItem(LOGIN_KEY);
+  if(saved){ try{ currentUser = JSON.parse(saved); showApp(); }catch(e){ localStorage.removeItem(LOGIN_KEY); } }
 });
 </script>
 </body>
