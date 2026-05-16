@@ -1,41 +1,107 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="sl">
 <head>
-    <title></title>
-	<meta charset="utf-8" />
-    <script src="Scripts/jquery-1.9.1.min.js"></script>
-    <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <script src="Scripts/isRockFx.js"></script>
-    <script>
-        $(function () {
-            $('#ButtonCal').click(
-                function () {
-                    //取得用戶輸入的參數
-                    var para = { 'height': $('#txbHeight').val(), 'weight': $('#txbWeight').val() };
-                    //呼叫API
-                    ExecuteAPI('Example', 'BMI', para,
-			//呼叫WebAPI成功時運行的Call Back Function
-                        function (result) {
-                            alert(result.Data);
-                        }
-                        );
-                }
-                );
-        });
-    </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zaključek blagajne</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f6fb;margin:0;color:#172033}
+header{background:#17365d;color:white;padding:24px}.wrap{max-width:1100px;margin:auto;padding:18px}
+.card{background:white;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 4px 18px #0001}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+label{font-weight:bold;font-size:13px;display:block;margin-bottom:5px}
+input,select{width:100%;padding:10px;border:1px solid #ccd5e1;border-radius:10px}
+button{background:#1f6feb;color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:bold;cursor:pointer;margin-right:8px}
+table{width:100%;border-collapse:collapse;background:white}th{background:#17365d;color:white;padding:9px;text-align:left}td{border-bottom:1px solid #e5e7eb;padding:8px}
+.kpi{font-size:24px;font-weight:bold}.ok{background:#dcfce7;color:#166534;padding:14px;border-radius:14px;text-align:center;font-weight:bold}
+.bad{background:#fee2e2;color:#991b1b;padding:14px;border-radius:14px;text-align:center;font-weight:bold}.warn{background:#ffedd5;color:#9a3412;padding:14px;border-radius:14px;text-align:center;font-weight:bold}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <div class="row" style="margin:10px">
-        <div class="col-md-12">
-            <div class="form-group">
-                身高:
-                <input id="txbHeight" class="form-control" placeholder="請輸入身高" />
-                體重:
-                <input id="txbWeight" class="form-control" placeholder="請輸入體重" />
-                <br />
-                <button class="btn btn-primary" id="ButtonCal">計算</button>
-            </div>
-        </div>
-    </div>
+<header><div class="wrap"><h1>Zaključek blagajne</h1><p>Aplikacija za trgovine, prodajalke in pisarno</p></div></header>
+<div class="wrap">
+<div class="card">
+<h2>Obrazec za prodajalko</h2>
+<div class="grid">
+<div><label>Datum</label><input id="datum" type="date"></div>
+<div><label>Trgovina</label><select id="trgovina"><option>Medvode</option><option>Ljubljana</option><option>Kranj</option></select></div>
+<div><label>Prodajalka</label><select id="prodajalka"><option>Špela</option><option>Maja</option><option>Nina</option><option>Petra</option></select></div>
+<div><label>Izmena</label><select id="izmena"><option>Dopoldan</option><option>Popoldan</option><option>Cel dan</option></select></div>
+<div><label>Začetno stanje €</label><input id="zacetno" type="number" value="250" step="0.01"></div>
+<div><label>Gotovina po POS €</label><input id="gotovinaPOS" type="number" value="0" step="0.01"></div>
+<div><label>Kartice €</label><input id="kartice" type="number" value="0" step="0.01"></div>
+<div><label>Stroški €</label><input id="stroski" type="number" value="0" step="0.01"></div>
+</div>
+</div>
+<div class="card"><h2>Štetje gotovine po apoenih</h2><div class="grid" id="apoeni"></div></div>
+<div class="card">
+<h2>Kontrola</h2>
+<p>Prešteta gotovina: <span class="kpi" id="presteto">0,00 €</span></p>
+<p>Pričakovano stanje: <span class="kpi" id="pricakovano">0,00 €</span></p>
+<p>Skupaj promet: <span class="kpi" id="promet">0,00 €</span></p>
+<p>Manjko / višek: <span class="kpi" id="razlika">0,00 €</span></p>
+<div id="status" class="ok">OK</div><br>
+<button onclick="shrani()">Shrani zaključek</button><button onclick="izvozCSV()">Izvozi CSV</button><button onclick="window.print()">Natisni / PDF</button>
+</div>
+<div class="card"><h2>Dashboard pisarna</h2><table id="tabela"></table></div>
+</div>
+<script>
+const apoeni=[200,100,50,20,10,5,2,1,0.5,0.2,0.1,0.05,0.02,0.01];
+let zakljucki=JSON.parse(localStorage.getItem("zakljucki")||"[]");
+const eur=n=>new Intl.NumberFormat("sl-SI",{style:"currency",currency:"EUR"}).format(Number(n||0));
+document.getElementById("datum").value=new Date().toISOString().slice(0,10);
+document.getElementById("apoeni").innerHTML=apoeni.map(a=>`<div><label>${eur(a)}</label><input data-apoen="${a}" type="number" min="0" value="0"></div>`).join("");
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",racunaj));
+function n(id){return Number(document.getElementById(id).value||0)}
+function racunaj(){
+  let presteto=0;
+  document.querySelectorAll("[data-apoen]").forEach(i=>presteto+=Number(i.value||0)*Number(i.dataset.apoen));
+  let promet=n("gotovinaPOS")+n("kartice");
+  let pricakovano=n("zacetno")+n("gotovinaPOS")-n("stroski");
+  let razlika=presteto-pricakovano;
+  let status=Math.abs(razlika)<=1?"OK":razlika>0?"VIŠEK":"MANJKO";
+  document.getElementById("presteto").innerText=eur(presteto);
+  document.getElementById("pricakovano").innerText=eur(pricakovano);
+  document.getElementById("promet").innerText=eur(promet);
+  document.getElementById("razlika").innerText=eur(razlika);
+  let s=document.getElementById("status");
+  s.innerText=status;
+  s.className=status==="OK"?"ok":status==="VIŠEK"?"warn":"bad";
+  return {presteto,promet,pricakovano,razlika,status};
+}
+function shrani(){
+  let r=racunaj();
+  zakljucki.unshift({
+    datum:document.getElementById("datum").value,
+    trgovina:document.getElementById("trgovina").value,
+    prodajalka:document.getElementById("prodajalka").value,
+    izmena:document.getElementById("izmena").value,
+    gotovinaPOS:n("gotovinaPOS"),
+    kartice:n("kartice"),
+    stroski:n("stroski"),
+    presteto:r.presteto,
+    promet:r.promet,
+    pricakovano:r.pricakovano,
+    razlika:r.razlika,
+    status:r.status
+  });
+  localStorage.setItem("zakljucki",JSON.stringify(zakljucki));
+  prikazi();
+  alert("Zaključek shranjen.");
+}
+function prikazi(){
+  document.getElementById("tabela").innerHTML="<tr><th>Datum</th><th>Trgovina</th><th>Prodajalka</th><th>Promet</th><th>Prešteto</th><th>Razlika</th><th>Status</th></tr>"+
+  zakljucki.map(z=>`<tr><td>${z.datum}</td><td>${z.trgovina}</td><td>${z.prodajalka}</td><td>${eur(z.promet)}</td><td>${eur(z.presteto)}</td><td>${eur(z.razlika)}</td><td>${z.status}</td></tr>`).join("");
+}
+function izvozCSV(){
+  let csv="Datum;Trgovina;Prodajalka;Promet;Prešteto;Razlika;Status\n"+zakljucki.map(z=>`${z.datum};${z.trgovina};${z.prodajalka};${z.promet};${z.presteto};${z.razlika};${z.status}`).join("\n");
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv"}));
+  a.download="zakljucki.csv";
+  a.click();
+}
+racunaj(); prikazi();
+</script>
 </body>
 </html>
